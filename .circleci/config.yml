@@ -103,6 +103,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install tar utility
+          command: |
+            yum install -y tar gzip
+      - run:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
@@ -132,6 +136,25 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       - destroy_backend
+
+  configure-infrastructure:
+    docker:
+      - image: python
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "e9:bb:98:2d:68:3f:23:11:ab:50:5d:18:a8:03:4c:10"
+      - run:
+          name: "install ansible"
+          command: |
+            pip install ansible
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Run playbook and configure server
+          command: |
+            ansible-playbook -i inventory.txt main.yml
 
 
 workflows:
