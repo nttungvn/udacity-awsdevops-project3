@@ -149,12 +149,16 @@ jobs:
           name: install ansible
           command: |
             pip install ansible
+      - run:
+          name: install awscli
+          command: |
+            pip install awscli
       - attach_workspace:
           at: /tmp/
       - run:
           name: Run playbook and configure server
           command: |
-            cd .circleci/ansible && ansible-playbook -i ~/inventory.txt mail.yml
+            cd .circleci/ansible && ansible-playbook -i ~/inventory.txt main.yml
       - destroy_backend
 
 workflows:
