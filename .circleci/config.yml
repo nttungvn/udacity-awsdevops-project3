@@ -154,7 +154,7 @@ jobs:
       - run:
           name: Run playbook and configure server
           command: |
-            cd .circleci/ansible && ansible-playbook -i ~/inventory.txt configure-server.yml
+            cd .circleci/ansible && ansible-playbook -i ~/inventory.txt mail.yml
 
 
 workflows:
