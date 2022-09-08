@@ -207,3 +207,6 @@ workflows:
       - configure-infrastructure:
           requires:
             - "deploy-infrastructure"
+      - deploy:
+          requires:
+            - "configure-infrastructure"
