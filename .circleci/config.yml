@@ -196,7 +196,7 @@ jobs:
       - run:
           name: Install tar utility
           command: |
-            apt-get update && apt-get install python
+            sudo apt-get update && sudo apt-get install python
       - run:
           name: Install ansible and awscli
           command: |
