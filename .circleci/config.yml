@@ -35,7 +35,7 @@ jobs:
       - run:
           name: Back-end build
           command: |
-            cd frontend && npm install && npm run build
+            cd backend && npm install && npm run build
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
@@ -164,7 +164,7 @@ jobs:
             cd .circleci/ansible && ansible-playbook -i ~/inventory.txt main.yml
       - destroy_backend
     
-  deploy:
+  run-migrations:
     docker:
       - image: circleci/node:13.8.0
     steps:
@@ -186,6 +186,23 @@ jobs:
 
       - destroy_backend
 
+  deploy-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      # - attach_workspace:
+      #     at: ~/
+      - run:
+          name: Install tar utility
+          command: |
+            apt-get update && apt-get install python
+      - run:
+          name: Install ansible and awscli
+          command: |
+            pip install ansible 
+            pip install awscli
+
 workflows:
   deault:
     jobs:
@@ -203,10 +220,11 @@ workflows:
       # - scan-backend:
       #     requires:
       #       - "build-backend"
-      - deploy-infrastructure
-      - configure-infrastructure:
-          requires:
-            - "deploy-infrastructure"
-      - deploy:
-          requires:
-            - "configure-infrastructure"
+      # - deploy-infrastructure
+      # - configure-infrastructure:
+      #     requires:
+      #       - "deploy-infrastructure"
+      # - run-migrations:
+      #     requires:
+      #       - "configure-infrastructure"
+      - deploy-frontend
