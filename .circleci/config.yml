@@ -139,23 +139,23 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: python
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
             - "e9:bb:98:2d:68:3f:23:11:ab:50:5d:18:a8:03:4c:10"
       - run:
-          name: Install tar utility
+          name: install ansible
           command: |
-            yum install -y tar gzip ansible
+            pip install ansible
       - attach_workspace:
           at: /tmp/
       - run:
           name: Run playbook and configure server
           command: |
             cd .circleci/ansible && ansible-playbook -i ~/inventory.txt mail.yml
-
+      - destroy_backend
 
 workflows:
   deault:
