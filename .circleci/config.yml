@@ -162,6 +162,12 @@ jobs:
           name: Run playbook and configure server
           command: |
             cd .circleci/ansible && ansible-playbook -i ~/inventory.txt main.yml
+      - run:
+          name: Run migrations
+          command: |
+            cd backend
+            npm install 
+            npm run migrations > migrations_dump.txt
       - destroy_backend
 
 workflows:
