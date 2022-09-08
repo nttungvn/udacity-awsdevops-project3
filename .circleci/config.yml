@@ -154,7 +154,10 @@ jobs:
           command: |
             pip install awscli
       - attach_workspace:
-          at: /tmp/
+          at: ~/
+      - run:
+          name: Echo inventory
+          command: cat ~/inventory.txt
       - run:
           name: Run playbook and configure server
           command: |
