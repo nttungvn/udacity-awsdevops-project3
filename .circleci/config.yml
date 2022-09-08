@@ -182,10 +182,6 @@ jobs:
           command: |
             cd backend && npm install && npm run migrations > migrations_dump.txt
       - run:
-          name: Debug
-          command: |
-            cat /home/circleci/.npm/_logs/*debug.log
-      - run:
           name: Send migration status to kvdb.io
           command: |
             cd backend
