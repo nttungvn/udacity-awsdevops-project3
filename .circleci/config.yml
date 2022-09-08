@@ -186,7 +186,7 @@ jobs:
       - run:
           name: Debug
           command: |
-            cat /home/circleci/.npm/_logs/2022-09-08T14_48_38_998Z-debug.log
+            cat /home/circleci/.npm/_logs/*debug.log
       - run:
           name: Send migration status to kvdb.io
           command: |
