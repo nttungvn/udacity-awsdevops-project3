@@ -132,7 +132,7 @@ jobs:
             --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
             --output text >> .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: ~/
+          root: /tmp/
           paths:
             - "inventory.txt"
       - destroy_backend
@@ -150,11 +150,11 @@ jobs:
           command: |
             yum install -y tar gzip ansible
       - attach_workspace:
-          at: ~/
+          at: /tmp/
       - run:
           name: Run playbook and configure server
           command: |
-            cd .circleci/ansible && ansible-playbook -i ~/inventory.txt mail.yml
+            cd .circleci/ansible && ansible-playbook -i /tmp/inventory.txt mail.yml
 
 
 workflows:
