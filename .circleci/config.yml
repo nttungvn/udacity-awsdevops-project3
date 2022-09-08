@@ -134,27 +134,27 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - "inventory.txt"
       - destroy_backend
 
   configure-infrastructure:
     docker:
-      - image: python
+      - image: amazon/aws-cli
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
             - "e9:bb:98:2d:68:3f:23:11:ab:50:5d:18:a8:03:4c:10"
       - run:
-          name: "install ansible"
+          name: Install tar utility
           command: |
-            pip install ansible
+            yum install -y tar gzip ansible
       - attach_workspace:
           at: ~/
       - run:
           name: Run playbook and configure server
           command: |
-            ansible-playbook -i inventory.txt main.yml
+            cd .circleci/ansible && ansible-playbook -i ~/inventory.txt configure-server.yml
 
 
 workflows:
@@ -175,3 +175,6 @@ workflows:
       #     requires:
       #       - "build-backend"
       - deploy-infrastructure
+      - configure-infrastructure:
+          requires:
+            - "deploy-infrastructure"
