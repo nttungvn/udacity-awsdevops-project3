@@ -301,3 +301,4 @@ workflows:
       - deploy-backend:
           requires:
             - "configure-infrastructure"
+            - "run-migrations"
