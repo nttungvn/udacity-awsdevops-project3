@@ -253,7 +253,7 @@ jobs:
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
             export BACKEND_IP=$(cat ~/inventory.txt)
-            scp -r -o StrictHostKeyChecking=no artifact.tar.gz ubuntu@'$BACKEND_IP':/home/ubuntu/
+            scp -r -o StrictHostKeyChecking=no artifact.tar.gz ubuntu@$BACKEND_IP:/home/ubuntu/
             cd .circleci/ansible
             echo "Contents  of the ~/inventory.txt file is -------"
             cat ~/inventory.txt
