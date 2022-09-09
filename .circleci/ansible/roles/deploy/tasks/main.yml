@@ -1,4 +1,7 @@
 ---
+- name: Wait for EC2 setting up
+  wait_for_connection:
+    timeout: 60
 - name: "update apt package"
   become: true
   apt:
