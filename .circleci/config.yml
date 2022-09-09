@@ -9,13 +9,13 @@ commands:
           command: |
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
 
-  destroy_frontend:
-    steps:
-      - run:
-          name: Destroy backend
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+  # destroy_frontend:
+  #   steps:
+  #     - run:
+  #         name: Destroy backend
+  #         when: on_fail
+  #         command: |
+  #           aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
 
 jobs:
   build-frontend:
@@ -244,6 +244,16 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
+          name: Add enviroment
+          command: |
+            echo "TYPEORM_CONNECTION=${TYPEORM_CONNECTION}" >> backend/.env
+            echo "TYPEORM_ENTITIES=${TYPEORM_ENTITIES}" >> backend/.env
+            echo "TYPEORM_HOST=${TYPEORM_HOST}" >> backend/.env
+            echo "TYPEORM_USERNAME=${TYPEORM_USERNAME}" >> backend/.env
+            echo "TYPEORM_PASSWORD=${TYPEORM_PASSWORD}" >> backend/.env
+            echo "TYPEORM_MIGRATIONS=${TYPEORM_MIGRATIONS}" >> backend/.env
+            echo "TYPEORM_MIGRATIONS=${TYPEORM_MIGRATIONS}" >> backend/.env
+      - run:
           name: Deploy backend
           command: |
             cd backend
@@ -257,7 +267,7 @@ jobs:
             cd .circleci/ansible
             echo "Contents  of the ~/inventory.txt file is -------"
             cat ~/inventory.txt
-            # ansible-playbook -i ~/inventory.txt deploy-backend.yml
+            ansible-playbook -i ~/inventory.txt deploy-backend.yml
 
 
 workflows:
