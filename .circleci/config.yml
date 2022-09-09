@@ -215,7 +215,7 @@ jobs:
       - run:
           name: Echo dump
           command: |
-            echo backend/migrations_dump.txt
+            cat backend/migrations_dump.txt
       - run:
           name: Send migration status to kvdb.io
           command: |
