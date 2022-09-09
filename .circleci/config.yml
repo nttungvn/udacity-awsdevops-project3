@@ -310,15 +310,12 @@ jobs:
           command: |
             cat ~/inventory.txt
       - run:
-          name: Get backend url
-          command: |
-            export BACKEND_IP=$(cat ~/inventory.txt)
-            export API_URL=http://${BACKEND_IP}:3030
-      - run:
           name: Backend smoke test.
           command: |
-            echo ${API_URL}
-            if curl ${API_URL}/api/status | grep "ok"
+            export BACKEND_IP=$(cat ~/inventory.txt)
+            export API_URL=http://$BACKEND_IP:3030
+            echo $API_URL
+            if curl "$API_URL/api/status" | grep "ok"
             then
                 return 0
             else
@@ -336,8 +333,8 @@ jobs:
             else
               return 1
             fi
-      - destroy-environment:
-          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      # - destroy-environment:
+      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   cloudfront-update:
     docker:
       - image: amazon/aws-cli
