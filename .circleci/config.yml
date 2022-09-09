@@ -227,6 +227,39 @@ jobs:
 
       - destroy_frontend
 
+  deploy-backend:
+    docker:
+      - image: python
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "e9:bb:98:2d:68:3f:23:11:ab:50:5d:18:a8:03:4c:10"
+      - run:
+          name: install requirement
+          command: |
+            pip install ansible
+            pip install awscli
+            apt update && apt install nodejs npm tar gzip
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Deploy backend
+          command: |
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            # Zip the directory
+            tar -C backend -czvf artifact.tar.gz .
+            export BACKEND_IP=$(cat ~/inventory.txt)
+            scp -r -o StrictHostKeyChecking=no artifact.tar.gz ubuntu@'$BACKEND_IP':/home/ubuntu/
+            cd .circleci/ansible
+            echo "Contents  of the ~/inventory.txt file is -------"
+            cat ~/inventory.txt
+            # ansible-playbook -i ~/inventory.txt deploy-backend.yml
+
+
 workflows:
   deault:
     jobs:
@@ -244,11 +277,14 @@ workflows:
       # - scan-backend:
       #     requires:
       #       - "build-backend"
-      # - deploy-infrastructure
+      - deploy-infrastructure
       # - configure-infrastructure:
       #     requires:
       #       - "deploy-infrastructure"
-      - run-migrations
+      # - run-migrations
       # - deploy-frontend:
       #     requires:
       #       - "deploy-infrastructure"
+      - deploy-backend:
+          requires:
+            - "deploy-infrastructure"
