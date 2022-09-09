@@ -306,6 +306,10 @@ jobs:
       - attach_workspace:
           at: ~/
       - run:
+          name: Echo inventory
+          command: |
+            cat ~/inventory.txt
+      - run:
           name: Get backend url
           command: |
             export BACKEND_IP=$(cat ~/inventory.txt)
@@ -334,6 +338,20 @@ jobs:
             fi
       - destroy-environment:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+  cloudfront-update:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Switch env prod
+          command: |
+            # Change the initial stack name, as applicable to you
+            aws cloudformation deploy \
+            --template-file .circleci/files/cloudfront.yml \
+            --stack-name InitialStack \
+            --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --tags project=udapeople
 
 workflows:
   deault:
@@ -356,6 +374,8 @@ workflows:
           requires:
             - "scan-frontend"
             - "scan-backend"
+            - "test-frontend"
+            - "test-backend"
       - configure-infrastructure:
           requires:
             - "deploy-infrastructure"
