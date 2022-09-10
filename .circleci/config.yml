@@ -348,9 +348,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            pip install ansible
-            pip install awscli
-            apt update && apt install nodejs npm tar gzip -y
+            apt update && apt install tar gzip -y
       - attach_workspace:
           at: ~/
       - run:
