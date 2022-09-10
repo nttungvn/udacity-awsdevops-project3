@@ -217,6 +217,7 @@ jobs:
           command: |
             cat backend/migrations_dump.txt
             cat backend/.env
+            echo ${TYPEORM_CONNECTION}
       - run:
           name: Send migration status to kvdb.io
           command: |
