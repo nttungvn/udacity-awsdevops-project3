@@ -1,2 +1,1 @@
-# udacity-awsdevops-project3
-...
+http://udapeople-4d1438f.s3-website-us-east-1.amazonaws.com/
