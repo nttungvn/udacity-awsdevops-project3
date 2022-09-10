@@ -198,18 +198,6 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      # - run:
-      #     name: Set enviroment
-      #     command: |
-      #       export NODE_ENV=local
-      #       export VERSION=1
-      #       export TYPEORM_CONNECTION=postgres
-      #       export TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
-      #       export TYPEORM_MIGRATIONS=./src/migrations/*.ts
-      #       export TYPEORM_MIGRATIONS_DIR=./src/migrations
-      #       export TYPEORM_HOST=$TYPEORM_HOST
-      #       export TYPEORM_USERNAME=$TYPEORM_USERNAME
-      #       export TYPEORM_PASSWORD=$TYPEORM_PASSWORD
       # - attach_workspace:
       #     at: ~/
       - run:
@@ -229,7 +217,7 @@ jobs:
             cd backend
             if grep -q "has been executed successfully."  migrations_dump.txt
             then
-              curl https://kvdb.io/TFbubBBBgVe2hXFeyRNXtT/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl --insecure https://kvdb.io/TFbubBBBgVe2hXFeyRNXtT/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       - revert-migrations:
           workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
@@ -286,16 +274,6 @@ jobs:
             apt update && apt install nodejs npm tar gzip -y
       - attach_workspace:
           at: ~/
-      - run:
-          name: Add enviroment
-          command: |
-            echo "TYPEORM_CONNECTION=${TYPEORM_CONNECTION}" >> backend/.env
-            echo "TYPEORM_ENTITIES=${TYPEORM_ENTITIES}" >> backend/.env
-            echo "TYPEORM_HOST=${TYPEORM_HOST}" >> backend/.env
-            echo "TYPEORM_USERNAME=${TYPEORM_USERNAME}" >> backend/.env
-            echo "TYPEORM_PASSWORD=${TYPEORM_PASSWORD}" >> backend/.env
-            echo "TYPEORM_MIGRATIONS=${TYPEORM_MIGRATIONS}" >> backend/.env
-            echo "TYPEORM_MIGRATIONS_DIR=${TYPEORM_MIGRATIONS_DIR}" >> backend/.env
       - run:
           name: Deploy backend
           command: |
