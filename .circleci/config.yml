@@ -207,7 +207,7 @@ jobs:
             echo "TYPEORM_USERNAME=${TYPEORM_USERNAME}" >> backend/.env
             echo "TYPEORM_PASSWORD=${TYPEORM_PASSWORD}" >> backend/.env
             echo "TYPEORM_MIGRATIONS=${TYPEORM_MIGRATIONS}" >> backend/.env
-            echo "TYPEORM_MIGRATIONS=${TYPEORM_MIGRATIONS}" >> backend/.env
+            echo "TYPEORM_MIGRATIONS_DIR=${TYPEORM_MIGRATIONS_DIR}" >> backend/.env
       - restore_cache:
           keys: [backend-build]
       - attach_workspace:
@@ -216,8 +216,8 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-              npm install
-              npm run migrations > migrations_dump.txt
+            npm install
+            npm run migrations > migrations_dump.txt
       - run:
           name: Echo dump
           command: |
@@ -296,7 +296,7 @@ jobs:
             echo "TYPEORM_USERNAME=${TYPEORM_USERNAME}" >> backend/.env
             echo "TYPEORM_PASSWORD=${TYPEORM_PASSWORD}" >> backend/.env
             echo "TYPEORM_MIGRATIONS=${TYPEORM_MIGRATIONS}" >> backend/.env
-            echo "TYPEORM_MIGRATIONS=${TYPEORM_MIGRATIONS}" >> backend/.env
+            echo "TYPEORM_MIGRATIONS_DIR=${TYPEORM_MIGRATIONS_DIR}" >> backend/.env
       - run:
           name: Deploy backend
           command: |
@@ -414,8 +414,5 @@ workflows:
       #     requires:
       #       - "deploy-frontend"
       #       - "deploy-backend"
-      - build-backend
-      - run-migrations:
-          requires:
-            - "build-backend"
+      - run-migrations
       
