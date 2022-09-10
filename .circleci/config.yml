@@ -215,7 +215,7 @@ jobs:
       - run:
           name: Echo dump
           command: |
-            cat backend/migrations_dump.txt
+            # cat backend/migrations_dump.txt
             cat backend/.env
             echo $(curl ${TYPEORM_CONNECTION})
       - run:
