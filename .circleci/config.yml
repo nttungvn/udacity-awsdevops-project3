@@ -8,16 +8,12 @@ commands:
           type: string   
     steps:
       - run:
-          name: Destroy backend
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflow_id >>
-      - run:
-          name: Destroy frontend
+          name: Destroy environment
           when: on_fail
           command: |
             aws s3 rb s3://udapeople-<< parameters.workflow_id >> --force
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow_id >>
+            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflow_id >>
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
@@ -322,7 +318,7 @@ jobs:
             if curl -s $URL | grep "Welcome"
             then
                 # Change this to 0 after the job fails
-              exit 1
+              exit 0
             else
               exit 1
             fi
@@ -335,6 +331,14 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run:
+          name: Get Old CF ID
+          command: |
+            export OldWorkflowID=$(aws cloudformation \
+              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+              --no-paginate --output text)
+            echo $OldWorkflowID >> ~/OldWorkflowID.txt
+            cat ~/OldWorkflowID.txt
       - run:
           name: Switch env prod
           command: |
@@ -385,4 +389,7 @@ workflows:
           requires:
             - "deploy-frontend"
             - "deploy-backend"
+      - cloudfront-update:
+          requires:
+            - "smoke-test"
       
