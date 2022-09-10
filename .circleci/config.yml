@@ -210,7 +210,7 @@ jobs:
           name: Echo dump
           command: |
             cat backend/migrations_dump.txt
-            echo $TYPEORM_HOST
+            echo $CIRCLE_WORKFLOW_ID
       - run:
           name: Send migration status to kvdb.io
           command: |
