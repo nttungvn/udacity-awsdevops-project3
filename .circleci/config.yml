@@ -142,15 +142,15 @@ jobs:
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} \
               --tags project=udapeople \
               --region us-east-1 
-      # - run:
-      #     name: Ensure front-end infrastructure exist
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file .circleci/files/frontend.yml \
-      #         --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} \
-      #         --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} \
-      #         --tags project=udapeople \
-      #         --region us-east-1 
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7} \
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} \
+              --tags project=udapeople \
+              --region us-east-1 
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -190,8 +190,8 @@ jobs:
           name: Run playbook and configure server
           command: |
             cd .circleci/ansible && ansible-playbook -i ~/inventory.txt main.yml
-      # - destroy-environment:
-      #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
     
   run-migrations:
     docker:
@@ -406,7 +406,5 @@ workflows:
       #     requires:
       #       - "deploy-frontend"
       #       - "deploy-backend"
-      - deploy-infrastructure
-      - run-migrations:
-          requires:
-            - "deploy-infrastructure"
+      - run-migrations
+      
