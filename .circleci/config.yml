@@ -25,7 +25,7 @@ commands:
           when: on_fail
           # Add when this will run
           command: |
-            SUCCESS=$(curl --insecure  https://kvdb.io/W346UCAkUyuYeSj1o3XSY1/migration_<< parameters.workflow_id >>)
+            SUCCESS=$(curl --insecure  https://kvdb.io/TFbubBBBgVe2hXFeyRNXtT/migration_<< parameters.workflow_id >>)
             # Logic for reverting the database state
             if (( "$SUCCESS" == "1" ));
             then
@@ -209,7 +209,7 @@ jobs:
             cd backend
             if grep -q "has been executed successfully."  migrations_dump.txt
             then
-              curl --insecure https://kvdb.io/W346UCAkUyuYeSj1o3XSY1/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl --insecure https://kvdb.io/TFbubBBBgVe2hXFeyRNXtT/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
 
   deploy-frontend:
@@ -348,7 +348,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apt update && apt install tar gzip -y
+            yum install tar gzip -y
       - attach_workspace:
           at: ~/
       - run:
@@ -375,7 +375,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apt update && apt install tar gzip -y
+            yum install tar gzip -y
       - attach_workspace:
           at: ~/
       - run:
@@ -397,46 +397,47 @@ jobs:
 workflows:
   deault:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires:
-            - "build-frontend"
-      - test-backend:
-          requires:
-            - "build-backend"
-      - scan-frontend:
-          requires:
-            - "build-frontend"
-      - scan-backend:
-          requires:
-            - "build-backend"
-      - deploy-infrastructure:
-          requires:
-            - "scan-frontend"
-            - "scan-backend"
-            - "test-frontend"
-            - "test-backend"
-      - configure-infrastructure:
-          requires:
-            - "deploy-infrastructure"
-      - run-migrations:
-          requires:
-            - "configure-infrastructure"
-      - deploy-frontend:
-          requires:
-            - "configure-infrastructure"
-      - deploy-backend:
-          requires:
-            - "configure-infrastructure"
-            - "run-migrations"
-      - smoke-test:
-          requires:
-            - "deploy-frontend"
-            - "deploy-backend"
-      - cloudfront-update:
-          requires:
-            - "smoke-test"
+      # - build-frontend
+      # - build-backend
+      # - test-frontend:
+      #     requires:
+      #       - "build-frontend"
+      # - test-backend:
+      #     requires:
+      #       - "build-backend"
+      # - scan-frontend:
+      #     requires:
+      #       - "build-frontend"
+      # - scan-backend:
+      #     requires:
+      #       - "build-backend"
+      # - deploy-infrastructure:
+      #     requires:
+      #       - "scan-frontend"
+      #       - "scan-backend"
+      #       - "test-frontend"
+      #       - "test-backend"
+      # - configure-infrastructure:
+      #     requires:
+      #       - "deploy-infrastructure"
+      # - run-migrations:
+      #     requires:
+      #       - "configure-infrastructure"
+      # - deploy-frontend:
+      #     requires:
+      #       - "configure-infrastructure"
+      # - deploy-backend:
+      #     requires:
+      #       - "configure-infrastructure"
+      #       - "run-migrations"
+      # - smoke-test:
+      #     requires:
+      #       - "deploy-frontend"
+      #       - "deploy-backend"
+      # - cloudfront-update:
+      #     requires:
+      #       - "smoke-test"
+      - cloudfront-update
       - cleanup:
           requires:
             - "cloudfront-update"
