@@ -44,7 +44,7 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            cd frontend && npm install typescript -g && npm run build
+            cd frontend && npm install && npm run build
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
