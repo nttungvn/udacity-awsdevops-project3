@@ -414,5 +414,8 @@ workflows:
       #     requires:
       #       - "deploy-frontend"
       #       - "deploy-backend"
-      - run-migrations
+      - build-backend
+      - run-migrations:
+          requires:
+            - "build-backend"
       
