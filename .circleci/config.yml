@@ -44,7 +44,7 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            cd frontend && npm install && npm run build
+            cd frontend && npm install typescript -g && npm run build
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -336,7 +336,6 @@ jobs:
             else
               exit 1
             fi
-            
       # - destroy-environment:
       #     workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
       # - revert-migrations:
