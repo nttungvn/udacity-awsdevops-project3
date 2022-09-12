@@ -389,7 +389,7 @@ jobs:
             echo $OldWorkflowID
             CIRCLE_WORKFLOW_ID=${CIRCLE_WORKFLOW_ID:0:7}
             echo CIRCLE_WORKFLOW_ID: $CIRCLE_WORKFLOW_ID
-            if [[ "$CIRCLE_WORKFLOW_ID" =~ "$OldWorkflowID" ]]
+            if [[ "$OldWorkflowID" != *"$CIRCLE_WORKFLOW_ID"* ]]
             then
               echo "Delete confirmed"
               aws s3 rb "s3://udapeople-${OldWorkflowID}" --force
